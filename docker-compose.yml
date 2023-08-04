@@ -1,0 +1,39 @@
+# Version of docker compose syntax
+version: '3.9'
+
+# Services that make up for development env
+# context: . -> refer to dockerfile
+# environment -> refer to development server
+services:
+  config:
+    build:
+      context: .
+      args:
+        - DEV=true
+    command: >
+      sh -c "python manage.py wait_for_db &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - 8000:8000
+    volumes:
+      - ./app:/config
+    environment:
+      - SECRET_KEY=devscretkey
+      - DEBUG=1
+      - DB_HOST=db
+      - DB_NAME=devdb
+      - DB_USER=devuser
+      - DB_PASS=changeme
+    depends_on:
+      - db
+
+  # db container should start before the app container
+  # There should be a network connection set up the app and the db container
+
+  db:
+    image: postgres:13-alpine
+    environment:
+      - POSTGRES_DB=devdb
+      - POSTGRES_USER=devuser
+      - POSTGRES_PASSWORD=changeme
