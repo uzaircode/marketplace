@@ -34,6 +34,7 @@ ALLOWED_HOSTS.extend(
     )
 )
 
+LOGIN_REDIRECT_URL = 'myaccount'
 LOGOUT_REDIRECT_URL = 'frontpage'
 
 # Application definition
