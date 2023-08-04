@@ -34,6 +34,8 @@ ALLOWED_HOSTS.extend(
     )
 )
 
+LOGOUT_REDIRECT_URL = 'frontpage'
+
 # Application definition
 
 INSTALLED_APPS = [
