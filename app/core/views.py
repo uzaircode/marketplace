@@ -9,9 +9,12 @@ from store.models import Product
 #         'products': products
 #     })
 
+
 class frontpage(ListView):
     """ Display all products """
     model = Product
+    template_name = 'frontpage.html'
+    context_object_name = 'products'
 
 
 def about(request):
