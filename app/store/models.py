@@ -33,3 +33,6 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_display_price(self):
+        return self.price
