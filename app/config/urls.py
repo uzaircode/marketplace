@@ -8,6 +8,7 @@ from core.views import frontpage, about
 urlpatterns = [
     path('about/', about, name='about'),
     path('admin/', admin.site.urls),
+    path('', include('userprofile.urls')),
     path('', include('store.urls')),
     path('', frontpage.as_view(), name='frontpage'),
     # path('', frontpage, name='frontpage'),
