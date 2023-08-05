@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -37,6 +38,8 @@ def add_product(request):
             product.slug = slugify(title)
             product.save()
 
+            messages.success(request, 'The product was added')
+
             return redirect('my_store')
     else:
         form = ProductForm()
@@ -71,6 +74,8 @@ def edit_product(request, pk):
 
         if form.is_valid():
             form.save()
+
+            messages.success(request, 'The changes was saved')
 
             return redirect('my_store')
     else:
