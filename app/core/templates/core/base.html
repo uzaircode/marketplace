@@ -12,22 +12,22 @@
   </head>
   <body>
     <nav class="max-w-4xl mx-auto py-4 px-6 bg-teal-600 flex items-center justify-between items.center">
-        <div class="logo">
+        <div class="logo  hidden lg:block">
             <a href=" {% url 'frontpage' %}" class="text-2xl text-white">etsy</a>
         </div>
 
         <div class='search'>
-          <form method="get" action="/search/">
-              <input type="search" name="query" placeholder="Search">
-              <button class='text-white bg-gray-600 '>Search</button>
+          <form method="get" action="/search/" class="flex items-center space-x-4">
+              <input type="search" name="query" placeholder="Search" class='py-2 px-4 rounded-xl'>
+              <button class='text-white bg-gray-400 w-full p-2 rounded-xl'>Search</button>
           </form>
         </div>
 
-        <div class="menu flex space-x-4">
+        <div class="menu flex items-center space-x-4">
             {% menu %}
             {% if request.user.is_authenticated %}
-              <a href=" {% url 'myaccount' %}" class="text-white">My account</a>
-              <a href=" {% url 'my_store' %}" class="text-white">My Store</a>
+              <a href=" {% url 'myaccount' %}" class="py-2 px-4 bg-teal-800 text-white  rounded-xl hover:bg-teal-900">My account</a>
+              <a href=" {% url 'my_store' %}" class="py-2 px-4 bg-teal-800 text-white rounded-xl hover:bg-teal-900">My Store</a>
               {% else %}
               <a href=" {% url 'login' %}" class="text-white">Login</a>
             {% endif %}
