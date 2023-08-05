@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.text import slugify
+from django.urls import reverse
+from django.views.generic import CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import UserProfile
 from store.forms import ProductForm
@@ -22,26 +25,41 @@ def my_store(request):
     return render(request, 'userprofile/my_store.html')
 
 
-@login_required
-def add_product(request):
-    if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)
+# @login_required
+# def add_product(request):
+#     if request.method == 'POST':
+#         form = ProductForm(request.POST, request.FILES)
 
-        if form.is_valid():
-            title = request.POST.get('title')
-            product = form.save(commit=False)
-            product.user = request.user
-            product.slug = slugify(title)
-            product.save()
+#         if form.is_valid():
+#             title = request.POST.get('title')
+#             product = form.save(commit=False)
+#             product.user = request.user
+#             product.slug = slugify(title)
+#             product.save()
 
-            return redirect('my_store')
-    else:
-        form = ProductForm()
+#             return redirect('my_store')
+#     else:
+#         form = ProductForm()
 
-    return render(request, 'userprofile/add_product.html', {
-        'title': 'Add Product',
-        'form': form,
-    })
+#     return render(request, 'userprofile/add_product.html', {
+#         'title': 'Add Product',
+#         'form': form,
+#     })
+
+
+class AddProduct(LoginRequiredMixin, CreateView):
+    model = Product
+    fields = ['category', 'title', 'description', 'price', 'image']
+    # form_class = ProductForm()
+    template_name = 'userprofile/add_product.html'
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.slug = slugify(form.instance.title)
+        return super(AddProduct, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('my_store')
 
 
 @login_required
