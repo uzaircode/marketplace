@@ -16,5 +16,7 @@ urlpatterns = [
     # path('my-store/add-product/', AddProduct.as_view(), name='add_product'),
     path('my-store/edit-product/<int:pk>/',
          views.edit_product, name='edit_product'),
+    path('my-store/delete-product/<int:pk>/',
+         views.delete_product, name='delete_product'),
     path('vendors/<int:pk>/', views.vendor_detail, name='vendor_detail'),
 ]
