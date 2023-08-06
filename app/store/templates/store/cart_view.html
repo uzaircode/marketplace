@@ -10,6 +10,10 @@
             <b>Title: </b>{{ item.product.title }}
             <p class="text-sm text-gray-500">${{ item.product.get_display_price }}</p>
             <b>Quantity: </b> {{ item.quantity }}
+
+            <a href=" {% url 'change_quantity' item.product.id %}?action=increase">Increase +</a>
+            <a href=" {% url 'change_quantity' item.product.id %}?action=decrease">Decrease -</a>
+
             <a href=" {% url 'remove_from_cart' item.product.id %}">Remove from cart</a>
         </p>
     {% endfor %}
