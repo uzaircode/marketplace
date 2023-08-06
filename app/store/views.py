@@ -1,8 +1,10 @@
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import redirect, render, get_object_or_404
 
 from .cart import Cart
-from .models import Product, Category
+from .forms import OrderForm
+from .models import Product, Category, Order, OrderItem
 
 
 def add_to_cart(request, product_id):
@@ -38,7 +40,48 @@ def cart_view(request):
     cart = Cart(request)
 
     return render(request, 'store/cart_view.html', {
-        'cart': cart
+        'cart': cart,
+    })
+
+
+@login_required
+def checkout(request):
+    cart = Cart(request)
+
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+
+        if form.is_valid():
+            total_price = 0
+
+            for item in cart:
+                product = item['product']
+                total_price += product.price * int(item['quantity'])
+
+            order = form.save(commit=False)
+            order.created_by = request.user
+            order.total_cost = total_price
+            order.save()
+
+            for item in cart:
+                product = item['product']
+                quantity = int(item['quantity'])
+                price = product.price * quantity
+
+                item = OrderItem.objects.create(
+                    order=order, product=product,
+                    price=price, quantity=quantity,
+                )
+
+            cart.clear()
+
+            return redirect('myaccount')
+    else:
+        form = OrderForm()
+
+    return render(request, 'store/checkout.html', {
+        'cart': cart,
+        'form': form,
     })
 
 
@@ -65,8 +108,6 @@ def category_detail(request, slug):
 
 def product_detail(request, category_slug, slug):
     cart = Cart(request)
-
-    print(cart.get_total_cost())
 
     product = get_object_or_404(Product, slug=slug, status=Product.ACTIVE)
 
