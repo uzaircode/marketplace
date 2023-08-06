@@ -1,7 +1,15 @@
 from django.db.models import Q
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 
+from .cart import Cart
 from .models import Product, Category
+
+
+def add_to_cart(request, product_id):
+    cart = Cart(request)
+    cart.add(product_id)
+
+    return redirect('frontpage')
 
 
 def search(request):
@@ -26,9 +34,13 @@ def category_detail(request, slug):
 
 
 def product_detail(request, category_slug, slug):
+    cart = Cart(request)
+
+    print(cart.get_total_cost())
+    print("hello world")
+
     product = get_object_or_404(Product, slug=slug, status=Product.ACTIVE)
 
-    product = Product.objects.get(slug=slug)
     return render(request, 'store/product_detail.html', {
         'product': product
     })
